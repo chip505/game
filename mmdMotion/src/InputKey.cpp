@@ -10,6 +10,7 @@ InputKey* InputKey::getInstance(){
 		mInstance = new InputKey();
 	}
 
+	
 	return mInstance;
 }
 
