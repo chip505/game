@@ -18,7 +18,7 @@ void rotate(float *x, float *y, const float ang, const float mx, const float my)
 }
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow){
-	// 画面モードの変更
+	// 画面初期化
     SetGraphMode(800, 600, 32);
 	ChangeWindowMode(TRUE);
 	if(DxLib_Init() == -1){
@@ -32,10 +32,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	// モデル
 	int ModelHandle = MV1LoadModel("../res/dat/Lat式ミク/Lat式ミクVer2.3_Normal.pmd");
-	int attachIndex = MV1AttachAnim(ModelHandle, 1, -1, false);
+	int attachIndex = MV1AttachAnim(ModelHandle, 0, -1, false);
 	float totalTime = MV1GetAttachAnimTotalTime(ModelHandle, attachIndex);
 	float playTime = 0.0f;
-	float angleY = 0.0f;
+	float angle = 0.0f;
 	float posX = 0.0f;
 	float posY = 0.0f;
 
@@ -48,7 +48,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	while(ScreenFlip() == 0 && ProcessMessage() == 0 
 		&& ClearDrawScreen() == 0 && GetHitKeyStateAll(key) == 0){
-		inputKey->setKey(key);
+		inputKey->updateKey(key);
 		
 		// カメラ
 		if(inputKey->isOn(KEY_INPUT_J)){
@@ -59,6 +59,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		SetCameraPositionAndTarget_UpVecY( VGet( cameraX, 50, cameraZ ), VGet( targetX, 10.0f, targetZ ) ) ;
 
+		// モーション選択
+		if(inputKey->isFirst()){
+
+		}
+
 		// ポーズ決め
 		if(inputKey->isOn(KEY_INPUT_RIGHT) || inputKey->isOn(KEY_INPUT_LEFT)){
 			playTime += 0.8f;
@@ -66,8 +71,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			if(playTime >= totalTime){
 				playTime = 0.0f;
 			}
-			//attachIndex = MV1AttachAnim( ModelHandle, 1, -1, FALSE ) ;
-			//totalTime = MV1GetAttachAnimTotalTime( ModelHandle, attachIndex ) ;
+
+			MV1DetachAnim(ModelHandle, attachIndex);
+			attachIndex = MV1AttachAnim( ModelHandle, 1, -1, FALSE ) ;
+			totalTime = MV1GetAttachAnimTotalTime( ModelHandle, attachIndex ) ;
 			MV1SetAttachAnimTime(ModelHandle, attachIndex, playTime);
 		}else{
 			playTime = 0.0f;
