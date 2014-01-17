@@ -2,44 +2,39 @@
 #define DDX_NON_INLINE_ASM
 #include "DxLib/DxLib.h"
 
-int changeCharacter(){
-	
-}
-
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow){
 	ChangeWindowMode(TRUE);
 	if(DxLib_Init() == -1){
 		return 1;
 	}
-	// ƒOƒ‰ƒtƒBƒbƒNƒnƒ“ƒhƒ‹
+	// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ãƒãƒ³ãƒ‰ãƒ«
 	int gh[12];
 	
-	// ‰æ‘œ“Ç‚İ‚İ
+	// ç”»åƒèª­ã¿è¾¼ã¿
 	LoadDivGraph("../res/images/shimakaze.png", 6, 3, 2, 24, 32, gh);
 
-	// ƒL[”z—ñ
+	// ã‚­ãƒ¼é…åˆ—
 	char key[256];
 
-	// xÀ•W,yÀ•W
+	// xåº§æ¨™,yåº§æ¨™
 	int x = 300, y = 300 ,y_prev = 0, y_temp = 0;
 	
-	// ƒWƒƒƒ“ƒvƒtƒ‰ƒO
+	// ã‚¸ãƒ£ãƒ³ãƒ—ãƒ•ãƒ©ã‚°
 	bool jflag = false;
 	
-	// ˆÚ“®—Ê•â³’l
+	// ç§»å‹•é‡è£œæ­£å€¤
 	float move = 1.0f;
 	
-	// ˆÚ“®—Ê•Ï”
+	// ç§»å‹•é‡å¤‰æ•°
 	int dx = 0;
 
-	// ‰¡•ûŒü‚Æc•ûŒü‚ÌƒJƒEƒ“ƒg”
+	// æ¨ªæ–¹å‘ã¨ç¸¦æ–¹å‘ã®ã‚«ã‚¦ãƒ³ãƒˆæ•°
 	int xcount = 0;
 
-	// “Yš—p•Ï”
+	// æ·»å­—ç”¨å¤‰æ•°
 	int ix = 0, result = 0;
 
-	// — ‰æ–Êì¬
+	// è£ç”»é¢ä½œæˆ
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	while(	ScreenFlip() == 0 && ProcessMessage() == 0 && ClearDrawScreen() == 0 && GetHitKeyStateAll(key) == 0){
@@ -65,7 +60,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			++xcount;
 		}
 		
-		// ƒWƒƒƒ“ƒvˆ—
+		// ã‚¸ãƒ£ãƒ³ãƒ—å‡¦ç†
 		if(jflag == true){
 			y_temp = y;
 			y += (y - y_prev) +1;
@@ -80,10 +75,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			y -= 20;
 		}
 		
-		// ƒJƒEƒ“ƒg”‚©‚ç“Yš‚ğ‹‚ß‚é
+		// ã‚«ã‚¦ãƒ³ãƒˆæ•°ã‹ã‚‰æ·»å­—ã‚’æ±‚ã‚ã‚‹
 		ix = abs(xcount) % 30 / 10;
 		
-		// xƒJƒEƒ“ƒg‚ªƒvƒ‰ƒX‚È‚ç‰EŒü‚«,ƒ}ƒCƒiƒX‚È‚ç¶Œü‚«
+		// xã‚«ã‚¦ãƒ³ãƒˆãŒãƒ—ãƒ©ã‚¹ãªã‚‰å³å‘ãã€ãƒã‚¤ãƒŠã‚¹ãªã‚‰å·¦å‘ã
 		if(xcount > 0){
 			ix += 0;
 			result = ix;
@@ -92,7 +87,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			result = ix;
 		}
 
-		// ŠŠ‚ç‚¹‚éˆ—
+		// æ»‘ã‚‰ã›ã‚‹å‡¦ç†
 		if(move == 0.0f){
 			if(dx != 0){
 				if(dx < 0){
@@ -105,7 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			x += dx;
 		}
 
-		// ‰Ÿ‚³‚ê‚Ä‚È‚¯‚ê‚ÎƒJƒEƒ“ƒg‚ğƒ[ƒ‚É‚·‚é
+		// æŠ¼ã•ã‚Œã¦ãªã‘ã‚Œã°ã‚«ã‚¦ãƒ³ãƒˆã‚’ã‚¼ãƒ­ã«ã™ã‚‹
 		if(key[KEY_INPUT_LEFT] != 1 && key[KEY_INPUT_RIGHT] != 1){
 			xcount = 0;
 		}
@@ -118,7 +113,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		DrawRotaGraph(x,y, 2.0, 0.0,gh[result], TRUE);
 	}
 
-	// DxLib‚ÌI—¹ˆ—
+	// DxLibã®çµ‚äº†å‡¦ç†
 	DxLib_End();
 	return 0;
 }

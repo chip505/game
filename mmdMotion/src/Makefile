@@ -1,15 +1,14 @@
 TARGET=Sample
-CC=gcc
 CXX=g++
-CFLAGS=-g -O2 -w
-CXXFLAGS=$(CFLAGS)
+CXXFLAGS=-g -O2 -w
 LDFLAGS=-static-libgcc -static-libstdc++
 INCDIR=-I"./DxLib/"
 LIBDIR=-L"./DxLib/"
 LIBS=-lDxLib -lDxUseCLib -lDxDrawFunc -ljpeg -lpng -lzlib -ltheora_static -lvorbis_static -lvorbisfile_static -logg_static -lbulletdynamics -lbulletcollision -lbulletmath
 
 LIBS+=-lgdi32
-OBJS=main.o
+SRCS = main.cpp InputKey.cpp
+OBJS:=$(SRCS:.cpp=.o)
 
 .cpp.o:
 		$(CXX) $(CXXFLAGS) -c $<
