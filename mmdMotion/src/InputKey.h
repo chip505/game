@@ -5,7 +5,7 @@
 class InputKey{
 private:
 	static InputKey* mInstance;
-	int[256] key;
+	int key[256];
 private:
 	InputKey();
 	InputKey(const InputKey& rhs);
