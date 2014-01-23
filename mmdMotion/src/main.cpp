@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	char key[256];
 	InputKey *inputKey = InputKey::getInstance();
 
-	// モデル
+	// 人物モデル
 	int ModelHandle = MV1LoadModel("../res/dat/Lat式ミク/Lat式ミクVer2.3_Normal.pmd");
 	int attachIndex = MV1AttachAnim(ModelHandle, 0, -1, false);
 	float totalTime = MV1GetAttachAnimTotalTime(ModelHandle, attachIndex);
@@ -42,6 +42,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	float angle = 0.0f;
 	float posX = 0.0f;
 	float posZ = 0.0f;
+	float posY = 0.0f;
+	float prevPosY = 0.0f;
+	bool isJump = false;
+	int jumpCount = 0;
+
+	// 背景モデルの読み込み  
+	int backGroundModelHandle = MV1LoadModel( "../res/dat/バトーキン島/batokin_island5.x" ) ;  
+	MV1SetPosition( backGroundModelHandle, VGet( 0.0f, 0.0f, 0.0f ) ) ;  
 
 	// カメラ
 	float cameraX = 0.0f;
@@ -64,30 +72,52 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		SetCameraPositionAndTarget_UpVecY(VGet(cameraX, 50, cameraZ), VGet(targetX, 10.0f, targetZ)) ;
 
 		// ポーズ決め
-		if(inputKey->isOn(KEY_INPUT_RIGHT) || inputKey->isOn(KEY_INPUT_LEFT) || inputKey->isOn(KEY_INPUT_UP) || inputKey->isOn(KEY_INPUT_DOWN)) {
-			playTime += 0.8f;
+		if(inputKey->isOn(KEY_INPUT_SPACE)){
+			if(!isJump){
+				isJump = true;
+				MV1DetachAnim(ModelHandle, attachIndex);
+				attachIndex = MV1AttachAnim(ModelHandle, 2, -1, FALSE) ;
+				totalTime = MV1GetAttachAnimTotalTime(ModelHandle, attachIndex) ;
+				prevPosY = posY;
+				posY += 3.0f;
+			}
+		}
 
+		if(inputKey->isOn(KEY_INPUT_RIGHT) || inputKey->isOn(KEY_INPUT_LEFT) || inputKey->isOn(KEY_INPUT_UP) || inputKey->isOn(KEY_INPUT_DOWN)) {
+			if(!isJump) {
+				MV1DetachAnim(ModelHandle, attachIndex);
+				attachIndex = MV1AttachAnim(ModelHandle, 1, -1, FALSE) ;
+				totalTime = MV1GetAttachAnimTotalTime(ModelHandle, attachIndex) ;
+			}
+			playTime += 0.8f;
 			if(playTime >= totalTime) {
 				playTime = 0.0f;
 			}
-		} else {
-			playTime = 0.0f;
-			MV1DetachAnim(ModelHandle, attachIndex);
-			attachIndex = MV1AttachAnim(ModelHandle, 0, -1, FALSE) ;
-			totalTime = MV1GetAttachAnimTotalTime(ModelHandle, attachIndex) ;
-		}
 
-		// モーション選択
-		if(inputKey->isFirst(KEY_INPUT_LEFT) || inputKey->isFirst(KEY_INPUT_RIGHT) || inputKey->isFirst(KEY_INPUT_UP) || inputKey->isFirst(KEY_INPUT_DOWN)) {
-			MV1DetachAnim(ModelHandle, attachIndex);
-			attachIndex = MV1AttachAnim(ModelHandle, 1, -1, FALSE) ;
-			totalTime = MV1GetAttachAnimTotalTime(ModelHandle, attachIndex) ;
+		} else {
+				// なにも押されてなかったら直立
+			playTime = 0.0f;
+			if(!isJump){
+				MV1DetachAnim(ModelHandle, attachIndex);
+				attachIndex = MV1AttachAnim(ModelHandle, 0, -1, FALSE) ;
+				totalTime = MV1GetAttachAnimTotalTime(ModelHandle, attachIndex) ;
+			}
 		}
 
 		MV1SetAttachAnimTime(ModelHandle, attachIndex, playTime);
 
 
 		// モデル位置
+		if(isJump){
+			float y_temp = posY;
+            posY +=(posY - prevPosY) - 0.3f;
+            prevPosY = y_temp;
+            if(posY <= 0.0f){
+				posY = 0.0f; // 誤差防止
+				isJump = false;
+			}
+		}
+
 		if(inputKey->isOn(KEY_INPUT_RIGHT)) {
 			if(inputKey->isOn(KEY_INPUT_UP)) {
                 posX += 0.8f*0.7;
@@ -123,11 +153,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				angle = 0.0f;
 			}
 		}
-		MV1SetPosition(ModelHandle, VGet(posX, 0.0f, posZ)) ;
+		MV1SetPosition(ModelHandle, VGet(posX, posY, posZ)) ;
 		MV1SetRotationXYZ(ModelHandle, VGet(0.0f, angle, 0.0f)) ;
 
-
 		MV1DrawModel(ModelHandle);
+
+		// 背景描画
+		MV1DrawModel( backGroundModelHandle ) ;
 
 		if(inputKey->isOn(KEY_INPUT_ESCAPE)) break;
 	}
