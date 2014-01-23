@@ -64,12 +64,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		// カメラ
 		if(inputKey->isOn(KEY_INPUT_J)) {
-			rotate(&cameraX, &cameraZ, -DX_PI_F / 90.0f, targetX, targetZ);
+			rotate(&cameraX, &cameraZ, -DX_PI_F / 90.0f, posX, posZ);
 		} else if(inputKey->isOn(KEY_INPUT_K)) {
-			rotate(&cameraX, &cameraZ, DX_PI_F / 90.0f, targetX, targetZ);
+			rotate(&cameraX, &cameraZ, DX_PI_F / 90.0f, posX, posZ);
 		}
 
-		SetCameraPositionAndTarget_UpVecY(VGet(cameraX, 50, cameraZ), VGet(targetX, 10.0f, targetZ)) ;
+		SetCameraPositionAndTarget_UpVecY(VGet(cameraX, 50, cameraZ), VGet(posX, 10.0f, posZ)) ;
 
 		// ポーズ決め
 		if(inputKey->isOn(KEY_INPUT_SPACE)){
@@ -118,38 +118,40 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 		}
 
+		float localMoveX = 0.0f;
+		float localMoveZ = 0.0f;
 		if(inputKey->isOn(KEY_INPUT_RIGHT)) {
 			if(inputKey->isOn(KEY_INPUT_UP)) {
-                posX += 0.8f*0.7;
-				posZ += 0.8f*0.7;
+                localMoveX = 0.8f*0.7;
+				localMoveZ = 0.8f*0.7;
 				angle = -DX_PI_F * 3.0 / 4.0f;
 			} else if(inputKey->isOn(KEY_INPUT_DOWN)) {
-                posX += 0.8f*0.7;
-				posZ -= 0.8f*0.7;
+                localMoveX = 0.8f*0.7;
+				localMoveZ = 0.8f*0.7;
 				angle = -DX_PI_F / 4.0f;
 			} else {
-				posX += 0.8f;
+				localMoveX = 0.8f;
 				angle = -DX_PI_F / 2.0f;
 			}
 		} else if(inputKey->isOn(KEY_INPUT_LEFT)) {
 			if(inputKey->isOn(KEY_INPUT_UP)) {
-                posX -= 0.8f*0.7;
-				posZ += 0.8f*0.7;
+                localMoveX = 0.8f*0.7;
+				localMoveZ = 0.8f*0.7;
 				angle = DX_PI_F * 3.0 / 4.0f;
 			} else if(inputKey->isOn(KEY_INPUT_DOWN)) {
-                posX -= 0.8f*0.7;
-				posZ -= 0.8f*0.7;
+                localMoveX = 0.8f*0.7;
+				localMoveZ = 0.8f*0.7;
 				angle = DX_PI_F / 4.0f;
 			} else {
-				posX -= 0.8f;
+				localMoveX = 0.8f;
 				angle = DX_PI_F / 2.0f;
 			}
 		} else {
 			if(inputKey->isOn(KEY_INPUT_UP)) {
-				posZ += 0.8f;
+				localMoveZ = 0.8f;
 				angle = DX_PI_F;
 			} else if(inputKey->isOn(KEY_INPUT_DOWN)) {
-				posZ -= 0.8f;
+				localMoveZ = 0.8f;
 				angle = 0.0f;
 			}
 		}
