@@ -47,9 +47,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	bool isJump = false;
 	int jumpCount = 0;
 
-	// 背景モデルの読み込み  
-	int backGroundModelHandle = MV1LoadModel( "../res/dat/バトーキン島/batokin_island5.x" ) ;  
-	MV1SetPosition( backGroundModelHandle, VGet( 0.0f, 0.0f, 0.0f ) ) ;  
+	// 背景モデルの読み込み
+	int backGroundModelHandle = MV1LoadModel("../res/dat/バトーキン島/batokin_island5.x") ;
+	MV1SetPosition(backGroundModelHandle, VGet(0.0f, 0.0f, 0.0f)) ;
 
 	// カメラ
 	float cameraX = 0.0f;
@@ -72,8 +72,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		SetCameraPositionAndTarget_UpVecY(VGet(cameraX, 50, cameraZ), VGet(posX, 10.0f, posZ)) ;
 
 		// ポーズ決め
-		if(inputKey->isOn(KEY_INPUT_SPACE)){
-			if(!isJump){
+		if(inputKey->isOn(KEY_INPUT_SPACE)) {
+			if(!isJump) {
 				isJump = true;
 				MV1DetachAnim(ModelHandle, attachIndex);
 				attachIndex = MV1AttachAnim(ModelHandle, 2, -1, FALSE) ;
@@ -95,9 +95,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 
 		} else {
-				// なにも押されてなかったら直立
+			// なにも押されてなかったら直立
 			playTime = 0.0f;
-			if(!isJump){
+			if(!isJump) {
 				MV1DetachAnim(ModelHandle, attachIndex);
 				attachIndex = MV1AttachAnim(ModelHandle, 0, -1, FALSE) ;
 				totalTime = MV1GetAttachAnimTotalTime(ModelHandle, attachIndex) ;
@@ -108,11 +108,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 		// モデル位置
-		if(isJump){
+		if(isJump) {
 			float y_temp = posY;
-            posY +=(posY - prevPosY) - 0.3f;
-            prevPosY = y_temp;
-            if(posY <= 0.0f){
+			posY += (posY - prevPosY) - 0.3f;
+			prevPosY = y_temp;
+			if(posY <= 0.0f) {
 				posY = 0.0f; // 誤差防止
 				isJump = false;
 			}
@@ -120,48 +120,77 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		float localMoveX = 0.0f;
 		float localMoveZ = 0.0f;
+		float localAngle = 0.0f;
+		bool moveFlag = false;
 		if(inputKey->isOn(KEY_INPUT_RIGHT)) {
 			if(inputKey->isOn(KEY_INPUT_UP)) {
-                localMoveX = 0.8f*0.7;
-				localMoveZ = 0.8f*0.7;
-				angle = -DX_PI_F * 3.0 / 4.0f;
+				localMoveX = 0.8f * 0.7;
+				localMoveZ = 0.8f * 0.7;
+				localAngle = -DX_PI_F * 3.0 / 4.0f;
 			} else if(inputKey->isOn(KEY_INPUT_DOWN)) {
-                localMoveX = 0.8f*0.7;
-				localMoveZ = 0.8f*0.7;
-				angle = -DX_PI_F / 4.0f;
+				localMoveX = 0.8f * 0.7;
+				localMoveZ = -0.8f * 0.7;
+				localAngle = -DX_PI_F / 4.0f;
 			} else {
 				localMoveX = 0.8f;
-				angle = -DX_PI_F / 2.0f;
+				localAngle = -DX_PI_F / 2.0f;
 			}
+			moveFlag = true;
 		} else if(inputKey->isOn(KEY_INPUT_LEFT)) {
 			if(inputKey->isOn(KEY_INPUT_UP)) {
-                localMoveX = 0.8f*0.7;
-				localMoveZ = 0.8f*0.7;
-				angle = DX_PI_F * 3.0 / 4.0f;
+				localMoveX = -0.8f * 0.7;
+				localMoveZ = 0.8f * 0.7;
+				localAngle = DX_PI_F * 3.0 / 4.0f;
 			} else if(inputKey->isOn(KEY_INPUT_DOWN)) {
-                localMoveX = 0.8f*0.7;
-				localMoveZ = 0.8f*0.7;
-				angle = DX_PI_F / 4.0f;
+				localMoveX = -0.8f * 0.7;
+				localMoveZ = -0.8f * 0.7;
+				localAngle = DX_PI_F / 4.0f;
 			} else {
-				localMoveX = 0.8f;
-				angle = DX_PI_F / 2.0f;
+				localMoveX = -0.8f;
+				localAngle = DX_PI_F / 2.0f;
 			}
+			moveFlag = true;
 		} else {
 			if(inputKey->isOn(KEY_INPUT_UP)) {
 				localMoveZ = 0.8f;
-				angle = DX_PI_F;
+				localAngle = DX_PI_F;
+				moveFlag = true;
 			} else if(inputKey->isOn(KEY_INPUT_DOWN)) {
-				localMoveZ = 0.8f;
-				angle = 0.0f;
+				localMoveZ = -0.8f;
+				localAngle = 0.0f;
+				moveFlag = true;
 			}
 		}
+
+		if(moveFlag) {
+			// ローカル移動をグローバル移動へ変換
+			float dx = posX - cameraX;
+			float dz = posZ - cameraZ;
+			float r = hypot(dx, dz);
+
+			float cos_sita = dz / r;
+			float sin_sita = dx / r;
+
+			posX = posX + localMoveX * cos_sita + localMoveZ * sin_sita;
+			posZ = posZ - localMoveX * sin_sita + localMoveZ * cos_sita;
+
+			//　ローカルモデル回転をグローバルモデル回転へ
+			float cameraAngle = 0.0f;
+			if(dx >= 0) {
+				cameraAngle = acos(cos_sita);
+			} else {
+				cameraAngle = acos(cos_sita) * (-1);
+			}
+			angle = cameraAngle + localAngle;
+		}
+		// モデル設置
 		MV1SetPosition(ModelHandle, VGet(posX, posY, posZ)) ;
 		MV1SetRotationXYZ(ModelHandle, VGet(0.0f, angle, 0.0f)) ;
 
 		MV1DrawModel(ModelHandle);
 
 		// 背景描画
-		MV1DrawModel( backGroundModelHandle ) ;
+		MV1DrawModel(backGroundModelHandle) ;
 
 		if(inputKey->isOn(KEY_INPUT_ESCAPE)) break;
 	}
