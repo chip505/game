@@ -24,7 +24,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetGraphMode(800, 600, 32);
 	ChangeWindowMode(TRUE);
 
-	if(DxLib_Init() == -1) {
+	if (DxLib_Init() == -1) {
 		return -1;
 	}
 
@@ -58,22 +58,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	const float targetZ = 0.0f;
 	SetCameraNearFar(0.1f, 1000.0f);
 
-	while(ScreenFlip() == 0 && ProcessMessage() == 0
+	while (ScreenFlip() == 0 && ProcessMessage() == 0
 	        && ClearDrawScreen() == 0 && GetHitKeyStateAll(key) == 0) {
 		inputKey->updateKey(key);
 
 		// カメラ
-		if(inputKey->isOn(KEY_INPUT_J)) {
+		if (inputKey->isOn(KEY_INPUT_J)) {
 			rotate(&cameraX, &cameraZ, -DX_PI_F / 90.0f, posX, posZ);
-		} else if(inputKey->isOn(KEY_INPUT_K)) {
+		} else if (inputKey->isOn(KEY_INPUT_K)) {
 			rotate(&cameraX, &cameraZ, DX_PI_F / 90.0f, posX, posZ);
 		}
 
 		SetCameraPositionAndTarget_UpVecY(VGet(cameraX, 50, cameraZ), VGet(posX, 10.0f, posZ)) ;
 
 		// ポーズ決め
-		if(inputKey->isOn(KEY_INPUT_SPACE)) {
-			if(!isJump) {
+		if (inputKey->isOn(KEY_INPUT_SPACE)) {
+			if (!isJump) {
 				isJump = true;
 				MV1DetachAnim(ModelHandle, attachIndex);
 				attachIndex = MV1AttachAnim(ModelHandle, 2, -1, FALSE) ;
@@ -83,21 +83,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 		}
 
-		if(inputKey->isOn(KEY_INPUT_RIGHT) || inputKey->isOn(KEY_INPUT_LEFT) || inputKey->isOn(KEY_INPUT_UP) || inputKey->isOn(KEY_INPUT_DOWN)) {
-			if(!isJump) {
+		if (inputKey->isOn(KEY_INPUT_RIGHT) || inputKey->isOn(KEY_INPUT_LEFT) || inputKey->isOn(KEY_INPUT_UP) || inputKey->isOn(KEY_INPUT_DOWN)) {
+			if (!isJump) {
 				MV1DetachAnim(ModelHandle, attachIndex);
 				attachIndex = MV1AttachAnim(ModelHandle, 1, -1, FALSE) ;
 				totalTime = MV1GetAttachAnimTotalTime(ModelHandle, attachIndex) ;
 			}
 			playTime += 0.8f;
-			if(playTime >= totalTime) {
+			if (playTime >= totalTime) {
 				playTime = 0.0f;
 			}
 
 		} else {
 			// なにも押されてなかったら直立
 			playTime = 0.0f;
-			if(!isJump) {
+			if (!isJump) {
 				MV1DetachAnim(ModelHandle, attachIndex);
 				attachIndex = MV1AttachAnim(ModelHandle, 0, -1, FALSE) ;
 				totalTime = MV1GetAttachAnimTotalTime(ModelHandle, attachIndex) ;
@@ -108,11 +108,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 
 		// モデル位置
-		if(isJump) {
+		if (isJump) {
 			float y_temp = posY;
-			posY += (posY - prevPosY) - 0.3f;
+			posY += (posY - prevPosY) - 0.2f;
 			prevPosY = y_temp;
-			if(posY <= 0.0f) {
+			if (posY <= 0.0f) {
 				posY = 0.0f; // 誤差防止
 				isJump = false;
 			}
@@ -122,12 +122,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		float localMoveZ = 0.0f;
 		float localAngle = 0.0f;
 		bool moveFlag = false;
-		if(inputKey->isOn(KEY_INPUT_RIGHT)) {
-			if(inputKey->isOn(KEY_INPUT_UP)) {
+		if (inputKey->isOn(KEY_INPUT_RIGHT)) {
+			if (inputKey->isOn(KEY_INPUT_UP)) {
 				localMoveX = 0.8f * 0.7;
 				localMoveZ = 0.8f * 0.7;
 				localAngle = -DX_PI_F * 3.0 / 4.0f;
-			} else if(inputKey->isOn(KEY_INPUT_DOWN)) {
+			} else if (inputKey->isOn(KEY_INPUT_DOWN)) {
 				localMoveX = 0.8f * 0.7;
 				localMoveZ = -0.8f * 0.7;
 				localAngle = -DX_PI_F / 4.0f;
@@ -136,12 +136,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				localAngle = -DX_PI_F / 2.0f;
 			}
 			moveFlag = true;
-		} else if(inputKey->isOn(KEY_INPUT_LEFT)) {
-			if(inputKey->isOn(KEY_INPUT_UP)) {
+		} else if (inputKey->isOn(KEY_INPUT_LEFT)) {
+			if (inputKey->isOn(KEY_INPUT_UP)) {
 				localMoveX = -0.8f * 0.7;
 				localMoveZ = 0.8f * 0.7;
 				localAngle = DX_PI_F * 3.0 / 4.0f;
-			} else if(inputKey->isOn(KEY_INPUT_DOWN)) {
+			} else if (inputKey->isOn(KEY_INPUT_DOWN)) {
 				localMoveX = -0.8f * 0.7;
 				localMoveZ = -0.8f * 0.7;
 				localAngle = DX_PI_F / 4.0f;
@@ -151,18 +151,18 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 			moveFlag = true;
 		} else {
-			if(inputKey->isOn(KEY_INPUT_UP)) {
+			if (inputKey->isOn(KEY_INPUT_UP)) {
 				localMoveZ = 0.8f;
 				localAngle = DX_PI_F;
 				moveFlag = true;
-			} else if(inputKey->isOn(KEY_INPUT_DOWN)) {
+			} else if (inputKey->isOn(KEY_INPUT_DOWN)) {
 				localMoveZ = -0.8f;
 				localAngle = 0.0f;
 				moveFlag = true;
 			}
 		}
 
-		if(moveFlag) {
+		if (moveFlag) {
 			// ローカル移動をグローバル移動へ変換
 			float dx = posX - cameraX;
 			float dz = posZ - cameraZ;
@@ -176,7 +176,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 			//　ローカルモデル回転をグローバルモデル回転へ
 			float cameraAngle = 0.0f;
-			if(dx >= 0) {
+			if (dx >= 0) {
 				cameraAngle = acos(cos_sita);
 			} else {
 				cameraAngle = acos(cos_sita) * (-1);
@@ -192,7 +192,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// 背景描画
 		MV1DrawModel(backGroundModelHandle) ;
 
-		if(inputKey->isOn(KEY_INPUT_ESCAPE)) break;
+		if (inputKey->isOn(KEY_INPUT_ESCAPE)) break;
 	}
 
 	DxLib_End();
