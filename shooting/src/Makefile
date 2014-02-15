@@ -7,7 +7,7 @@ LIBDIR=-L"./DxLib/"
 LIBS=-lDxLib -lDxUseCLib -lDxDrawFunc -ljpeg -lpng -lzlib -ltheora_static -lvorbis_static -lvorbisfile_static -logg_static -lbulletdynamics -lbulletcollision -lbulletmath
 
 LIBS+=-lgdi32
-SRCS = main.cpp Character.cpp Game.cpp InputKey.cpp
+SRCS = main.cpp Character.cpp InputKey.cpp Game.cpp Field.cpp
 OBJS:=$(SRCS:.cpp=.o)
 
 .cpp.o:

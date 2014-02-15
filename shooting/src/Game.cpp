@@ -3,6 +3,7 @@
 #include "DxLib/DxLib.h"
 #include "Character.h"
 #include "Game.h"
+#include "Field.h"
 #include "InputKey.h"
 
 #include <string>
@@ -11,17 +12,20 @@
 using namespace std;
 
 Game::Game(){
-	chara = new Character(200, 0);
+	chara = new Character(200, 300);
+	field = new Field();
 	endFlag = false;
 }
 
 Game::~Game(){
 	delete chara;
+	delete field;
 }
 
 void Game::update(){
 	InputKey* inputKey = InputKey::getInstance();
 	chara->update();
+	field->update();
 	// 終了判定
 	if(inputKey->isOn(KEY_INPUT_ESCAPE)){
 		endFlag = true;
@@ -30,4 +34,5 @@ void Game::update(){
 
 void Game::draw(){
 	chara->draw();
+	field->draw();
 }
