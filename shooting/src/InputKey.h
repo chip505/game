@@ -5,16 +5,16 @@
 class InputKey{
 private:
 	static InputKey* mInstance;
-	char* key;
+	int stateKey[256];
 private:
-	InputKey(){}
+	InputKey();
 	InputKey(const InputKey& rhs);
 	InputKey& operator=(const InputKey& rhs);
 public:
 	static InputKey* getInstance();
 	bool isOn(int keyIndex);
-	char* getKey(){	return key; }
-	void setKey(char* _key){ key = _key; }
+	bool isFirst(int keyIndex);
+	void setKey(char* _key);
 };
 
 #endif

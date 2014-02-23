@@ -54,5 +54,6 @@ void Character::draw(){
 
 
 void Character::update(){
-
+	cnt++;
+	ghIndex = (cnt % 24) / 6;
 }

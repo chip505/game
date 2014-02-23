@@ -10,8 +10,6 @@
 
 using namespace std;
 
-
-
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow){
 	// 画面モードの変更
 	ChangeWindowMode(TRUE);
