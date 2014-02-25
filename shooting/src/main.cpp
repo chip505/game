@@ -3,7 +3,7 @@
 #define GLOBAL_INSTANCE
 #include "DxLib/DxLib.h"
 #include "Game.h"
-#include "InputKey.h"
+#include "Input.h"
 
 #include <string>
 #include <iostream>
@@ -20,15 +20,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	char key[256];
-	InputKey* inputKey = InputKey::getInstance();
+	Input* input = Input::getInstance();
 
 	Game* game = new Game();
 	while(ScreenFlip() == 0 && ProcessMessage() == 0 
 		&& ClearDrawScreen() == 0 && GetHitKeyStateAll(key) == 0){
-		inputKey->setKey(key);
+		int padInput = GetJoypadInputState( DX_INPUT_PAD1 );//パッドの入力状態を取得
+		input->setInput(key, padInput);
 		game -> update();
 		game -> draw();
-		if( inputKey->isOn(KEY_INPUT_ESCAPE) ) break;
+		if( input->isKeyOn(KEY_INPUT_ESCAPE) ) break;
 	}
 
 	delete game;

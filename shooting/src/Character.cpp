@@ -1,6 +1,6 @@
 #include "DxLib/DxLib.h"
 #include "Character.h"
-#include "InputKey.h"
+#include "Input.h"
 
 #include <string>
 #include <iostream>
@@ -56,4 +56,12 @@ void Character::draw(){
 void Character::update(){
 	cnt++;
 	ghIndex = (cnt % 24) / 6;
+
+	Input* input = Input::getInstance();
+	if(input->isOn(Input::INPUT_LEFT)){
+		posX -= 4;
+	}
+	if(input->isOn(Input::INPUT_RIGHT)){
+		posX += 4;
+	}
 }

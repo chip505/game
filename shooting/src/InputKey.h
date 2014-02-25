@@ -4,17 +4,13 @@
 // singleton
 class InputKey{
 private:
-	static InputKey* mInstance;
-	int stateKey[256];
-private:
-	InputKey();
-	InputKey(const InputKey& rhs);
-	InputKey& operator=(const InputKey& rhs);
+	static const int KEY_MAX = 256;
+	int state[KEY_MAX];
 public:
-	static InputKey* getInstance();
+	InputKey();
 	bool isOn(int keyIndex);
 	bool isFirst(int keyIndex);
-	void setKey(char* _key);
+	void setInput(char* _key);
 };
 
 #endif

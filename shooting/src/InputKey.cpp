@@ -3,42 +3,41 @@
 #include "DxLib/DxLib.h"
 #include "InputKey.h"
 
-InputKey* InputKey::mInstance = 0;
-
-InputKey* InputKey::getInstance(){
-	if(mInstance == 0){
-		mInstance = new InputKey();
-	}
-
-	return mInstance;
-}
 
 InputKey::InputKey(){
-	for(int i = 0;i < 256;i++){
-		stateKey[i] = 0;
+	for(int i = 0;i < KEY_MAX;i++){
+		state[i] = 0;
 	}
 }
 
-void InputKey::setKey(char* _key){
-	for(int i = 0;i < 256;i++){
+void InputKey::setInput(char* _key){
+	for(int i = 0;i < KEY_MAX;i++){
 		if(_key[i] == 1){
-			stateKey[i]++;
+			state[i]++;
 		}else{
-			stateKey[i] = 0;
+			state[i] = 0;
 		}
 	}
 }
 
-bool InputKey::isOn(int keyIndex){
-	if(stateKey[keyIndex] > 0){
+bool InputKey::isOn(int index){
+	if(index < 0 || KEY_MAX <= index){
+		return false;
+	}
+
+	if(state[index] > 0){
 		return true;
 	}else{
 		return false;
 	}
 }
 
-bool InputKey::isFirst(int keyIndex){
-	if(stateKey[keyIndex] == 1){
+bool InputKey::isFirst(int index){
+	if(index < 0 || KEY_MAX <= index){
+		return false;
+	}
+
+	if(state[index] == 1){
 		return true;
 	}else{
 		return false;

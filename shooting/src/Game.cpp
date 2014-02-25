@@ -4,7 +4,7 @@
 #include "Character.h"
 #include "Game.h"
 #include "Field.h"
-#include "InputKey.h"
+#include "Input.h"
 
 #include <string>
 #include <iostream>
@@ -23,13 +23,13 @@ Game::~Game(){
 }
 
 void Game::update(){
-	InputKey* inputKey = InputKey::getInstance();
+	Input* input = Input::getInstance();
 	chara->update();
 	field->update();
 	// 終了判定
-	if(inputKey->isOn(KEY_INPUT_ESCAPE)){
-		endFlag = true;
-	}
+	//if(input->isKeyOn(KEY_INPUT_ESCAPE)){
+	//	endFlag = true;
+	//}
 }
 
 void Game::draw(){
