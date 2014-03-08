@@ -13,6 +13,8 @@ using namespace std;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow){
 	// 画面モードの変更
 	ChangeWindowMode(TRUE);
+	// ウインドウの大きさ：640×480
+
 	if(DxLib_Init() == -1){
 		return -1;
 	}

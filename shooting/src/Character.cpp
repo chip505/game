@@ -36,9 +36,12 @@ void Character::init(){
 	* | 6  7  8|
 	* |10 11 12|
  	*/
- 	witdh = 73;
+ 	width = 73;
  	height = 73;
  	ghIndex = 0;
+ 	speed = 4;
+ 	originX = 32;
+ 	originY = 16;
 	const string imageStr = "../dat/img/char/0.png";
 	LoadDivGraph(imageStr.c_str(), 12, 4, 3, 73, 73, gh);
 }
@@ -49,19 +52,65 @@ Character::~Character(){
 }
 
 void Character::draw(){
-	DrawGraph(posX, posY, gh[ghIndex], TRUE);
+	DrawGraph(originX + posX, originY + posY, gh[ghIndex], TRUE);
 }
 
 
-void Character::update(){
+void Character::update(int fieldMaxX, int fieldMaxY){
+	Input* input = Input::getInstance();
+
+	bool xMoveFlag = false;
+	bool yMoveFlag = false;
+
+	double dx = 0;
+	double dy = 0;
+
 	cnt++;
 	ghIndex = (cnt % 24) / 6;
 
-	Input* input = Input::getInstance();
 	if(input->isOn(Input::INPUT_LEFT)){
-		posX -= 4;
+		dx -= speed; 
+		xMoveFlag = true;
+		ghIndex += 8;
+	}else if(input->isOn(Input::INPUT_RIGHT)){
+		dx += speed; 
+		xMoveFlag = true;
+		ghIndex += 4;
 	}
-	if(input->isOn(Input::INPUT_RIGHT)){
-		posX += 4;
+	if(input->isOn(Input::INPUT_UP)){
+		dy -= speed; 
+		yMoveFlag = true;
+	}else if(input->isOn(Input::INPUT_DOWN)){
+		dy += speed; 
+		yMoveFlag = true;
+	}
+
+	if(xMoveFlag & yMoveFlag){
+		// 斜め移動
+		dx *= 0.71;
+		dy *= 0.71;
+	}
+
+	if(input->isOn(Input::INPUT_C)){
+		// スロウモード
+		dx /= 2;
+		dy /= 2;
+	}
+
+	// 移動
+	posX += dx;
+	posY += dy;
+
+	// 移動範囲チェック
+	if(posX < 0){
+		posX = 0;
+	}else if(posX > fieldMaxX - width){
+		posX = fieldMaxX - width;
+	}
+
+	if(posY < 0){
+		posY = 0;
+	}else if(posY > fieldMaxY - height){
+		posY = fieldMaxY - height;
 	}
 }

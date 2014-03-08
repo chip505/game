@@ -24,7 +24,9 @@ Game::~Game(){
 
 void Game::update(){
 	Input* input = Input::getInstance();
-	chara->update();
+	// キャラクターの移動制御
+	chara->update(384, 448);
+	
 	field->update();
 	// 終了判定
 	//if(input->isKeyOn(KEY_INPUT_ESCAPE)){
